@@ -14,8 +14,9 @@ server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind((HOST, PORT))
 
 # Armazena informações dos clientes
-publishers = {}
-subscribers = {}
+publishers = []
+subscribers = []
+topics = []
 
 
 def start_server():
@@ -36,12 +37,40 @@ def start_server():
 
 def handle_client(conn, addr):
 	print(f"[NEW CONNECTION] {addr} connected.")
-	connected = True
 	
+	client_and_topic = [addr]
+	print(f"client and topic 1 {client_and_topic}")
+
+	isSubscriberStream = conn.recv(1024)
+	isSubscriber = isSubscriberStream
+	print(f"{isSubscriber} teste variavel")
+
+	if isSubscriber == b'subscriber':
+		client_and_topic.append('subscriber')
+		print(f"[{addr}] added to list of subscribers")
+	elif isSubscriber == b'publisher':
+		client_and_topic.append('publisher')
+		print(f"[{addr}] added to list of publishers")
 	
-	while connected:
+	print(f"client and topic 2 {client_and_topic}")
+
+
+		
+	topic = conn.recv(1024)
+	topics.append(topic)
+	client_and_topic.append(topic)
+	print(f"client and topic 3 {client_and_topic}")
+
+	if client_and_topic[1] == 'subscriber':
+		subscribers.append(client_and_topic)
+	elif client_and_topic[1] == 'publisher':
+		publishers.append(client_and_topic)		
+
+	print(f"[SUBSCRIBERS] {subscribers}")
+	print(f"[PUBLISHERS] {publishers}")
+
+	while True:
 		data = conn.recv(1024)
-		# conn.send(b"[SELECT TOPIC] \n 1, 2, 3 OR 4")
 		if not data: return
 		print(f"Mensagem recebido do cliente {data}")
 	
