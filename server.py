@@ -39,7 +39,7 @@ def handle_client(conn, addr):
 	print(f"[NEW CONNECTION] {addr} connected.")
 	
 	client_and_topic = [addr]
-	print(f"client and topic 1 {client_and_topic}\n")
+	# print(f"client and topic 1 {client_and_topic}\n")
 
 	isSubscriberStream = conn.recv(1024)
 	isSubscriber = isSubscriberStream
@@ -51,14 +51,14 @@ def handle_client(conn, addr):
 		client_and_topic.append('publisher')
 		print(f"[{addr}] added to list of publishers")
 	
-	print(f"client and topic 2 {client_and_topic}")
+	# print(f"client and topic 2 {client_and_topic}")
 
 
 		
 	topic = conn.recv(1024)
 	topics.append([topic])
 	client_and_topic.append(topic)
-	print(f"client and topic 3 {client_and_topic}")
+	# print(f"client and topic 3 {client_and_topic}") -> isso foi só pra testar o valor da variável durante a execução e tals
 
 	if client_and_topic[1] == 'subscriber':
 		subscribers.append(client_and_topic)
@@ -75,10 +75,4 @@ def handle_client(conn, addr):
 	
 
 
-
-
-
-
-
 start_server()
-
