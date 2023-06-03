@@ -23,7 +23,7 @@ def start_server():
 	server.listen(5)
 	with server:
 		while True:			
-			active_threads = threading.active_count()
+			active_threads = threading.active_count() 
 			conn, addr = server.accept()
 			if active_threads < 7:
 				thread = threading.Thread(target=handle_client, args=(conn, addr))
@@ -38,7 +38,7 @@ def start_server():
 def handle_client(conn, addr):
 	print(f"[NEW CONNECTION] {addr} connected.")
 	
-	client_and_topic = [addr]
+	client_and_topic = [conn]
 	# print(f"client and topic 1 {client_and_topic}\n")
 
 	isSubscriberStream = conn.recv(1024)
@@ -65,11 +65,16 @@ def handle_client(conn, addr):
 	elif client_and_topic[1] == 'publisher':
 		publishers.append(client_and_topic)		
 
-	print(f"=================\n[SUBSCRIBERS] {subscribers}")
-	print(f"=================\n[PUBLISHERS] {publishers}")
-
+	# print(f"state of client_and_topic {client_and_topic}")
+	# print(f"=================\n[SUBSCRIBERS] {subscribers}")
+	# print(f"=================\n[PUBLISHERS] {publishers}")
 	while True:
 		data = conn.recv(1024)
+
+		if client_and_topic[1] == 'publisher':
+			for sub in subscribers:
+				sub_connection = sub[0]
+				sub_connection.sendall(data)
 		if not data: return
 		print(f"[MESSAGE RECIEVED FROM {addr}] {data}")
 	
