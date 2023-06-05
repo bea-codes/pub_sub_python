@@ -13,6 +13,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.sendall(is_subscriber)
     topic = input("[INSERT TOPIC NAME] ")
     s.send(bytes(topic, 'utf-8'))
+    last_msg = s.recv(1014)
+    print(last_msg)
     while True:
         data = s.recv(1024)
         print(bytes(data))
